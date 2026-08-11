@@ -47,7 +47,7 @@ export const eventController = {
 
   async submitForApproval(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const event = await eventService.submitForApproval(param(req.params.id), req.user!.userId);
+      const event = await eventService.submitForApproval(param(req.params.id), req.user!.userId, req.user!.role as UserRole);
       sendSuccess(res, event, 'Event submitted for approval');
     } catch (err) { next(err); }
   },

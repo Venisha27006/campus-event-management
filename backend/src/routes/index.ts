@@ -39,7 +39,7 @@ router.get('/events/:id/stats', authenticate, eventController.getStats);
 router.get('/events/:id/approval-history', authenticate, eventController.getApprovalHistory);
 
 // ─── Registrations ────────────────────────────────────────────────────────────
-router.post('/events/:eventId/register', authenticate, authorize('STUDENT', 'FACULTY_COORDINATOR'), registrationController.register);
+router.post('/events/:eventId/register', authenticate, registrationController.register);
 router.delete('/events/:eventId/register', authenticate, registrationController.cancel);
 router.get('/events/:eventId/participants', authenticate, authorize('SUPER_ADMIN', 'EVENT_ADMIN', 'FACULTY_COORDINATOR', 'STUDENT_ORGANIZER', 'VOLUNTEER'), registrationController.getEventParticipants);
 router.get('/registrations/me', authenticate, registrationController.getMyRegistrations);
@@ -59,7 +59,7 @@ router.get('/certificates/me', authenticate, certificateController.getMyCertific
 router.get('/certificates/verify/:token', certificateController.verify);
 
 // ─── Feedback ─────────────────────────────────────────────────────────────────
-router.post('/events/:eventId/feedback', authenticate, authorize('STUDENT', 'FACULTY_COORDINATOR'), feedbackController.submit);
+router.post('/events/:eventId/feedback', authenticate, feedbackController.submit);
 router.get('/events/:eventId/feedback', authenticate, feedbackController.getEventFeedback);
 
 // ─── Notifications ────────────────────────────────────────────────────────────

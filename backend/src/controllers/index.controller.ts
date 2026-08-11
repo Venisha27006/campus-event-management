@@ -117,16 +117,17 @@ export const analyticsController = {
   async superAdminDashboard(_req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const raw = await analyticsService.getSuperAdminDashboard();
-      const upcomingEvents = await prisma.event.findMany({
-        where: {
-          startDate: { gte: new Date() },
-          status: { in: ['REGISTRATION_OPEN', 'APPROVED', 'PUBLISHED'] },
-        },
+      const upcomingEventsList = await prisma.event.findMany({
+        where: { startDate: { gte: new Date() }, status: { in: ['REGISTRATION_OPEN', 'APPROVED', 'PUBLISHED'] } },
         include: { category: true },
         orderBy: { startDate: 'asc' },
         take: 5,
       });
-      sendSuccess(res, { ...raw.overview, ...raw.charts, upcomingEvents }, 'Dashboard data retrieved');
+      sendSuccess(res, {
+        ...raw.overview,
+        ...raw.charts,
+        upcomingEventsList,
+      }, 'Dashboard data retrieved');
     } catch (err) { next(err); }
   },
 

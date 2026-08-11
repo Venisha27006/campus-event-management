@@ -5,10 +5,9 @@
 **/dist/
 **/build/
 
-# Environment files (keep .env.example, ignore actual secrets)
+# Environment files — keep .env.example, ignore actual secrets
 .env
 .env.local
-.env.production
 backend/.env
 
 # Logs

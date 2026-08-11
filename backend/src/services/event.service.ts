@@ -173,10 +173,10 @@ async update(id: string, userId: string, userRole: UserRole, data: Partial<Creat
     return prisma.event.update({ where: { id }, data: updateData, include: eventInclude });
   },
 
-  async submitForApproval(id: string, userId: string) {
+  async submitForApproval(id: string, userId: string, userRole: UserRole) {
     const event = await prisma.event.findUnique({ where: { id } });
     if (!event) throw new NotFoundError('Event');
-    if (event.organizerId !== userId) throw new ForbiddenError();
+    if (event.organizerId !== userId && userRole !== UserRole.SUPER_ADMIN && userRole !== UserRole.EVENT_ADMIN) throw new ForbiddenError();
     if (event.status !== EventStatus.DRAFT) throw new AppError('Only draft events can be submitted for approval');
 
     return prisma.event.update({

@@ -30,7 +30,7 @@ interface AdminDashData {
   monthlyRegistrations: { date: string; count: number }[];
   monthlyEvents: { date: string; count: number }[];
   departmentParticipation: { department: string; count: number }[];
-  upcomingEventsList?: Event[];
+  upcomingEventsList?: { id: string; title: string; startDate: string; status: string; category?: { name: string } }[];
 }
 
 // ─── Organizer Dashboard Data Shape ──────────────────────────────────────────
@@ -182,6 +182,41 @@ const AdminDashboard: React.FC<{ data: AdminDashData }> = ({ data }) => (
         ))}
       </div>
     </Card>
+
+    {/* Upcoming Events */}
+    {data.upcomingEventsList && data.upcomingEventsList.length > 0 && (
+      <Card>
+        <div className="flex items-center justify-between mb-4 px-5 pt-5">
+          <h3 className="font-semibold text-gray-900">Upcoming Events</h3>
+          <Link to="/manage-events" className="text-sm text-primary-600 hover:underline">View all</Link>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100">
+                {['Event', 'Category', 'Date', 'Status'].map((h) => (
+                  <th key={h} className="text-left py-2 px-5 text-xs font-medium text-gray-500">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {data.upcomingEventsList.map((e) => (
+                <tr key={e.id} className="hover:bg-gray-50">
+                  <td className="py-3 px-5">
+                    <Link to={`/events/${e.id}`} className="font-medium text-gray-900 hover:text-primary-600">{e.title}</Link>
+                  </td>
+                  <td className="py-3 px-5 text-gray-500">{e.category?.name ?? '—'}</td>
+                  <td className="py-3 px-5 text-gray-500">{formatDate(e.startDate)}</td>
+                  <td className="py-3 px-5">
+                    <span className={cn('badge text-xs', getStatusColor(e.status as never))}>{e.status.replace(/_/g, ' ')}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    )}
   </div>
 );
 
