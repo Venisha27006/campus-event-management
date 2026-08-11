@@ -1,0 +1,580 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  SUPER_ADMIN
+  EVENT_ADMIN
+  FACULTY_COORDINATOR
+  STUDENT_ORGANIZER
+  STUDENT
+  VOLUNTEER
+  SPEAKER
+}
+
+enum EventStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  PUBLISHED
+  REGISTRATION_OPEN
+  REGISTRATION_CLOSED
+  ONGOING
+  COMPLETED
+  CANCELLED
+  ARCHIVED
+}
+
+enum ApprovalStatus {
+  PENDING
+  FACULTY_APPROVED
+  FACULTY_REJECTED
+  ADMIN_APPROVED
+  ADMIN_REJECTED
+}
+
+enum EventType {
+  TECHNICAL
+  WORKSHOP
+  SEMINAR
+  CONFERENCE
+  HACKATHON
+  CULTURAL
+  SPORTS
+  CLUB_ACTIVITY
+  COMPETITION
+  GUEST_LECTURE
+  PLACEMENT
+  DEPARTMENT
+  FACULTY_DEVELOPMENT
+  OTHER
+}
+
+enum EventMode {
+  OFFLINE
+  ONLINE
+  HYBRID
+}
+
+enum RegistrationStatus {
+  CONFIRMED
+  CANCELLED
+  WAITLISTED
+  ATTENDED
+  NO_SHOW
+}
+
+enum AttendanceMethod {
+  QR_SCAN
+  MANUAL
+}
+
+enum NotificationType {
+  EVENT_APPROVAL
+  EVENT_REJECTION
+  REGISTRATION_CONFIRMED
+  REGISTRATION_CANCELLED
+  WAITLIST_PROMOTED
+  EVENT_REMINDER
+  VENUE_CHANGE
+  EVENT_CANCELLED
+  EVENT_COMPLETED
+  CERTIFICATE_AVAILABLE
+  GENERAL
+}
+
+enum PaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum VolunteerStatus {
+  APPLIED
+  APPROVED
+  REJECTED
+  ACTIVE
+  COMPLETED
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// ─── Core User & Auth ─────────────────────────────────────────────────────────
+
+model User {
+  id                  String    @id @default(uuid())
+  email               String    @unique
+  passwordHash        String
+  firstName           String
+  lastName            String
+  phone               String?
+  avatar              String?
+  role                UserRole  @default(STUDENT)
+  departmentId        String?
+  academicYear        Int?
+  rollNumber          String?
+  isEmailVerified     Boolean   @default(false)
+  isActive            Boolean   @default(true)
+  emailVerifyToken    String?
+  passwordResetToken  String?
+  passwordResetExpiry DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  department        Department?     @relation(fields: [departmentId], references: [id])
+  sessions          UserSession[]
+  organizedEvents   Event[]         @relation("EventOrganizer")
+  coordinatedEvents Event[]         @relation("FacultyCoordinator")
+  registrations     Registration[]
+  waitlists         Waitlist[]
+  attendances       Attendance[]
+  notifications     Notification[]
+  feedbacks         Feedback[]
+  certificates      Certificate[]
+  volunteerProfiles Volunteer[]
+  speakerProfile    Speaker?
+  auditLogs         AuditLog[]
+  approvalActions   EventApproval[]
+  wishlists         Wishlist[]
+
+  @@index([email])
+  @@index([role])
+  @@index([departmentId])
+}
+
+model UserSession {
+  id           String   @id @default(uuid())
+  userId       String
+  refreshToken String   @unique
+  deviceInfo   String?
+  ipAddress    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([refreshToken])
+}
+
+// ─── Organization ─────────────────────────────────────────────────────────────
+
+model Department {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  code        String   @unique
+  description String?
+  headName    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  users  User[]
+  events Event[]
+}
+
+// ─── Event Core ───────────────────────────────────────────────────────────────
+
+model EventCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String?
+  icon        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  events Event[]
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+  slug String @unique
+
+  events EventTagMapping[]
+}
+
+model Event {
+  id                   String         @id @default(uuid())
+  title                String
+  slug                 String         @unique
+  description          String
+  shortDescription     String?
+  categoryId           String
+  eventType            EventType
+  eventMode            EventMode      @default(OFFLINE)
+  departmentId         String?
+  organizerId          String
+  facultyCoordinatorId String?
+  bannerImage          String?
+  startDate            DateTime
+  endDate              DateTime
+  venueId              String?
+  onlineMeetingUrl     String?
+  maxCapacity          Int
+  registrationDeadline DateTime
+  status               EventStatus    @default(DRAFT)
+  approvalStatus       ApprovalStatus @default(PENDING)
+  isPublic             Boolean        @default(true)
+  isFeatured           Boolean        @default(false)
+  eligibilityCriteria  String?
+  requiredDepartmentId String?
+  requiredYear         Int?
+  registrationFee      Decimal        @default(0) @db.Decimal(10, 2)
+  paymentRequired      Boolean        @default(false)
+  instructions         String?
+  contactEmail         String?
+  contactPhone         String?
+  viewCount            Int            @default(0)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  category           EventCategory     @relation(fields: [categoryId], references: [id])
+  department         Department?       @relation(fields: [departmentId], references: [id])
+  organizer          User              @relation("EventOrganizer", fields: [organizerId], references: [id])
+  facultyCoordinator User?             @relation("FacultyCoordinator", fields: [facultyCoordinatorId], references: [id])
+  venue              Venue?            @relation(fields: [venueId], references: [id])
+  tags               EventTagMapping[]
+  sessions           EventSession[]
+  speakers           EventSpeaker[]
+  registrations      Registration[]
+  waitlists          Waitlist[]
+  attendance         Attendance[]
+  feedbacks          Feedback[]
+  certificates       Certificate[]
+  notifications      Notification[]
+  approvals          EventApproval[]
+  volunteers         Volunteer[]
+  auditLogs          AuditLog[]
+  wishlists          Wishlist[]
+
+  @@index([status])
+  @@index([approvalStatus])
+  @@index([startDate])
+  @@index([organizerId])
+  @@index([categoryId])
+  @@index([departmentId])
+  @@index([slug])
+}
+
+model EventTagMapping {
+  eventId String
+  tagId   String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, tagId])
+}
+
+// ─── Approval Workflow ────────────────────────────────────────────────────────
+
+model EventApproval {
+  id              String   @id @default(uuid())
+  eventId         String
+  reviewerId      String
+  stage           String // FACULTY_REVIEW | ADMIN_REVIEW
+  decision        String // APPROVED | REJECTED
+  comments        String?
+  rejectionReason String?
+  createdAt       DateTime @default(now())
+
+  event    Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  reviewer User  @relation(fields: [reviewerId], references: [id])
+
+  @@index([eventId])
+}
+
+// ─── Venue ────────────────────────────────────────────────────────────────────
+
+model Venue {
+  id         String   @id @default(uuid())
+  name       String
+  building   String?
+  floor      String?
+  room       String?
+  capacity   Int
+  facilities String[]
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  events Event[]
+}
+
+// ─── Sessions & Speakers ──────────────────────────────────────────────────────
+
+model EventSession {
+  id          String   @id @default(uuid())
+  eventId     String
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  speakerId   String?
+  location    String?
+  sessionType String   @default("TALK")
+  order       Int      @default(0)
+
+  event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  speaker Speaker? @relation(fields: [speakerId], references: [id])
+
+  @@index([eventId])
+}
+
+model Speaker {
+  id           String   @id @default(uuid())
+  userId       String?  @unique
+  name         String
+  email        String?
+  organization String?
+  designation  String?
+  expertise    String[]
+  bio          String?
+  photo        String?
+  linkedinUrl  String?
+  createdAt    DateTime @default(now())
+
+  user     User?          @relation(fields: [userId], references: [id])
+  events   EventSpeaker[]
+  sessions EventSession[]
+}
+
+model EventSpeaker {
+  eventId   String
+  speakerId String
+  role      String?
+
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  speaker Speaker @relation(fields: [speakerId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, speakerId])
+}
+
+// ─── Registration ─────────────────────────────────────────────────────────────
+
+model Registration {
+  id            String             @id @default(uuid())
+  eventId       String
+  userId        String
+  status        RegistrationStatus @default(CONFIRMED)
+  qrCode        String             @unique
+  registeredAt  DateTime           @default(now())
+  cancelledAt   DateTime?
+  paymentStatus PaymentStatus      @default(NOT_REQUIRED)
+  transactionId String?
+  amountPaid    Decimal?           @db.Decimal(10, 2)
+  notes         String?
+
+  event       Event        @relation(fields: [eventId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
+  attendance  Attendance?
+  certificate Certificate?
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+  @@index([qrCode])
+  @@index([status])
+}
+
+model Waitlist {
+  id         String    @id @default(uuid())
+  eventId    String
+  userId     String
+  position   Int
+  joinedAt   DateTime  @default(now())
+  notifiedAt DateTime?
+  isActive   Boolean   @default(true)
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([eventId, userId])
+  @@index([eventId, position])
+}
+
+// ─── Attendance ───────────────────────────────────────────────────────────────
+
+model Attendance {
+  id             String           @id @default(uuid())
+  eventId        String
+  registrationId String           @unique
+  userId         String
+  checkInTime    DateTime?
+  checkOutTime   DateTime?
+  method         AttendanceMethod @default(QR_SCAN)
+  markedById     String?
+  notes          String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  event        Event        @relation(fields: [eventId], references: [id])
+  registration Registration @relation(fields: [registrationId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@index([eventId])
+  @@index([userId])
+}
+
+// ─── Feedback ─────────────────────────────────────────────────────────────────
+
+model Feedback {
+  id                 String   @id @default(uuid())
+  eventId            String
+  userId             String
+  overallRating      Int
+  speakerRating      Int?
+  organizationRating Int?
+  venueRating        Int?
+  contentRating      Int?
+  comments           String?
+  suggestions        String?
+  isAnonymous        Boolean  @default(false)
+  createdAt          DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+}
+
+// ─── Certificates ─────────────────────────────────────────────────────────────
+
+model Certificate {
+  id             String   @id @default(uuid())
+  certificateId  String   @unique
+  eventId        String
+  userId         String
+  registrationId String   @unique
+  issuedAt       DateTime @default(now())
+  pdfUrl         String?
+  verifyToken    String   @unique @default(uuid())
+  isValid        Boolean  @default(true)
+
+  event         Event                     @relation(fields: [eventId], references: [id])
+  user          User                      @relation(fields: [userId], references: [id])
+  registration  Registration              @relation(fields: [registrationId], references: [id])
+  verifications CertificateVerification[]
+
+  @@index([eventId])
+  @@index([userId])
+  @@index([certificateId])
+}
+
+model CertificateVerification {
+  id            String   @id @default(uuid())
+  certificateId String
+  ipAddress     String?
+  verifiedAt    DateTime @default(now())
+
+  certificate Certificate @relation(fields: [certificateId], references: [id])
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  eventId   String?
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+}
+
+// ─── Wishlist ─────────────────────────────────────────────────────────────────
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String
+  eventId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@index([userId])
+}
+
+// ─── Volunteers ───────────────────────────────────────────────────────────────
+
+model Volunteer {
+  id         String          @id @default(uuid())
+  eventId    String
+  userId     String
+  status     VolunteerStatus @default(APPLIED)
+  appliedAt  DateTime        @default(now())
+  approvedAt DateTime?
+  notes      String?
+
+  event Event           @relation(fields: [eventId], references: [id])
+  user  User            @relation(fields: [userId], references: [id])
+  tasks VolunteerTask[]
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+}
+
+model VolunteerTask {
+  id          String     @id @default(uuid())
+  volunteerId String
+  title       String
+  description String?
+  shiftStart  DateTime?
+  shiftEnd    DateTime?
+  status      TaskStatus @default(PENDING)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  volunteer Volunteer @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+}
+
+// ─── Audit Log ────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  action      String
+  module      String
+  entityId    String?
+  entityType  String?
+  description String?
+  oldValue    Json?
+  newValue    Json?
+  ipAddress   String?
+  userAgent   String?
+  eventId     String?
+  createdAt   DateTime @default(now())
+
+  user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  event Event? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([module])
+  @@index([createdAt])
+}

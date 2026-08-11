@@ -1,0 +1,96 @@
+﻿
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+src/components/events/EventCard.tsx(3,42): error TS6133: 'Clock' is declared but its value is never read.
+src/components/events/EventCard.tsx(4,10): error TS1484: 'Event' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/events/EventCard.tsx(5,10): error TS6133: 'Badge' is declared but its value is never read.
+src/components/events/EventForm.tsx(50,5): error TS2322: Type 'Resolver<{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: unknown; shortDescription?: string | undefined; ... 7 more ...; contactPhone?: string | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; registrationFee: number; ... 7 more ...; contactPhone?: string | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; registrationFee: number; ... 7 more ...; contactPhone?: string | undefined; }>' is not assignable to type 'ResolverOptions<{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: unknown; shortDescription?: string | undefined; ... 7 more ...; contactPhone?: string | undefined; }>'.
+      Type 'unknown' is not assignable to type 'number'.
+src/components/events/EventForm.tsx(59,34): error TS2345: Argument of type '(data: EventFormData) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues, Promise<void>>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; registrationFee: number; ... 7 more ...; contactPhone?: string | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; registrationFee: number; ... 7 more ...; contactPhone?: string | undefined; }': title, description, categoryId, eventType, and 6 more.
+src/components/layout/AppLayout.tsx(7,37): error TS6133: 'Settings' is declared but its value is never read.
+src/components/layout/AppLayout.tsx(7,47): error TS6133: 'Bell' is declared but its value is never read.
+src/components/layout/AppLayout.tsx(7,67): error TS6133: 'X' is declared but its value is never read.
+src/components/layout/AppLayout.tsx(8,76): error TS6133: 'ChevronDown' is declared but its value is never read.
+src/components/layout/NotificationBell.tsx(5,10): error TS1484: 'Notification' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/admin/AttendancePage.tsx(4,48): error TS6133: 'Search' is declared but its value is never read.
+src/pages/admin/AttendancePage.tsx(52,37): error TS2339: Property 'catch' does not exist on type 'void'.
+src/pages/admin/CreateEditEventPage.tsx(54,5): error TS2322: Type 'Resolver<{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: unknown; shortDescription?: string | undefined; ... 9 more ...; contactPhone?: string | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; shortDescription?: string | undefined; ... 9 more ...; contactPhone?: string | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; shortDescription?: string | undefined; ... 9 more ...; contactPhone?: string | undefined; }>' is not assignable to type 'ResolverOptions<{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: unknown; shortDescription?: string | undefined; ... 9 more ...; contactPhone?: string | undefined; }>'.
+      Type 'unknown' is not assignable to type 'number'.
+src/pages/admin/CreateEditEventPage.tsx(75,73): error TS2345: Argument of type '{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; shortDescription?: string | undefined; ... 9 more ...; contactPhone?: string | undefined; }' is not assignable to parameter of type 'FormData'.
+  Type '{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; shortDescription?: string | undefined; ... 9 more ...; contactPhone?: string | undefined; }' is missing the following properties from type 'FormData': append, delete, get, getAll, and 7 more.
+src/pages/admin/CreateEditEventPage.tsx(97,59): error TS2345: Argument of type 'TFieldValues' is not assignable to parameter of type '{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; shortDescription?: string | undefined; ... 9 more ...; contactPhone?: string | undefined; }'.
+  Type 'FieldValues' is missing the following properties from type '{ title: string; description: string; categoryId: string; eventType: string; eventMode: string; startDate: string; endDate: string; registrationDeadline: string; maxCapacity: number; shortDescription?: string | undefined; ... 9 more ...; contactPhone?: string | undefined; }': title, description, categoryId, eventType, and 5 more.
+src/pages/admin/ManageEventsPage.tsx(5,10): error TS1484: 'Event' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/admin/ManageEventsPage.tsx(6,46): error TS6133: 'Badge' is declared but its value is never read.
+src/pages/admin/ReportsPage.tsx(12,9): error TS6133: 'adminUser' is declared but its value is never read.
+src/pages/admin/UsersPage.tsx(5,10): error TS1484: 'User' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/admin/UsersPage.tsx(6,51): error TS6133: 'Badge' is declared but its value is never read.
+src/pages/analytics/AnalyticsPage.tsx(5,41): error TS6133: 'Legend' is declared but its value is never read.
+src/pages/analytics/AnalyticsPage.tsx(45,9): error TS6133: 'data' is declared but its value is never read.
+src/pages/analytics/AnalyticsPage.tsx(102,144): error TS2339: Property 'category' does not exist on type 'PieLabelRenderProps'.
+src/pages/analytics/AnalyticsPage.tsx(102,184): error TS18048: 'percent' is possibly 'undefined'.
+src/pages/auth/ForgotPasswordPage.tsx(9,1): error TS6133: 'toast' is declared but its value is never read.
+src/pages/certificates/CertificatesPage.tsx(7,22): error TS6133: 'downloadBlob' is declared but its value is never read.
+src/pages/certificates/CertificatesPage.tsx(8,10): error TS1484: 'Certificate' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/dashboard/DashboardPage.tsx(3,105): error TS6133: 'LineChart' is declared but its value is never read.
+src/pages/dashboard/DashboardPage.tsx(3,116): error TS6133: 'Line' is declared but its value is never read.
+src/pages/dashboard/DashboardPage.tsx(4,76): error TS6133: 'Star' is declared but its value is never read.
+src/pages/dashboard/DashboardPage.tsx(75,163): error TS18048: 'percent' is possibly 'undefined'.
+src/pages/dashboard/DashboardPage.tsx(98,38): error TS2322: Type 'number | null' is not assignable to type 'string | number'.
+  Type 'null' is not assignable to type 'string | number'.
+src/pages/dashboard/DashboardPage.tsx(99,42): error TS2322: Type 'number | null' is not assignable to type 'string | number'.
+  Type 'null' is not assignable to type 'string | number'.
+src/pages/dashboard/DashboardPage.tsx(100,39): error TS2322: Type 'number | null' is not assignable to type 'string | number'.
+  Type 'null' is not assignable to type 'string | number'.
+src/pages/dashboard/DashboardPage.tsx(101,41): error TS2322: Type 'number | null' is not assignable to type 'string | number'.
+  Type 'null' is not assignable to type 'string | number'.
+src/pages/events/CreateEventPage.tsx(5,21): error TS1484: 'EventFormData' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/events/EditEventPage.tsx(5,21): error TS1484: 'EventFormData' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/events/EditEventPage.tsx(60,32): error TS2339: Property 'eligibilityCriteria' does not exist on type 'Event'.
+src/pages/events/EditEventPage.tsx(61,25): error TS2339: Property 'instructions' does not exist on type 'Event'.
+src/pages/events/EditEventPage.tsx(63,25): error TS2339: Property 'contactPhone' does not exist on type 'Event'.
+src/pages/events/EventAttendancePage.tsx(6,34): error TS6133: 'Badge' is declared but its value is never read.
+src/pages/events/EventDetailPage.tsx(4,59): error TS6133: 'Heart' is declared but its value is never read.
+src/pages/events/EventDetailPage.tsx(4,66): error TS6133: 'Share2' is declared but its value is never read.
+src/pages/events/EventDetailPage.tsx(4,74): error TS6133: 'Star' is declared but its value is never read.
+src/pages/events/EventDetailPage.tsx(6,18): error TS6133: 'Badge' is declared but its value is never read.
+src/pages/events/EventDetailPage.tsx(8,22): error TS6133: 'formatDateTime' is declared but its value is never read.
+src/pages/events/EventDetailPage.tsx(13,11): error TS6133: 'user' is declared but its value is never read.
+src/pages/events/EventDetailPage.tsx(118,26): error TS2339: Property 'eligibilityCriteria' does not exist on type 'Event'.
+src/pages/events/EventDetailPage.tsx(121,67): error TS2339: Property 'eligibilityCriteria' does not exist on type 'Event'.
+src/pages/events/EventDetailPage.tsx(124,26): error TS2339: Property 'instructions' does not exist on type 'Event'.
+src/pages/events/EventDetailPage.tsx(127,69): error TS2339: Property 'instructions' does not exist on type 'Event'.
+src/pages/events/EventDetailPage.tsx(137,26): error TS2339: Property 'speakers' does not exist on type 'Event'.
+src/pages/events/EventDetailPage.tsx(137,51): error TS2339: Property 'speakers' does not exist on type 'Event'.
+src/pages/events/EventsPage.tsx(5,10): error TS1484: 'EventFilters' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/events/ManageEventsPage.tsx(7,18): error TS6133: 'Badge' is declared but its value is never read.
+src/pages/events/ManageEventsPage.tsx(9,10): error TS1484: 'Event' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/profile/CertificatesPage.tsx(5,10): error TS1484: 'Certificate' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/profile/MyRegistrationsPage.tsx(5,10): error TS1484: 'Registration' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/profile/MyRegistrationsPage.tsx(6,46): error TS6133: 'Badge' is declared but its value is never read.
+src/pages/profile/ProfilePage.tsx(12,9): error TS6133: 'qc' is declared but its value is never read.
+src/pages/registrations/MyRegistrationsPage.tsx(8,10): error TS1484: 'Registration' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/routes/index.tsx(6,10): error TS1484: 'UserRole' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,10): error TS1484: 'ApiResponse' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,23): error TS1484: 'AuthTokens' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,35): error TS1484: 'Event' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,42): error TS1484: 'EventFilters' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,56): error TS1484: 'PaginationMeta' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,72): error TS1484: 'Registration' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,86): error TS1484: 'Notification' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,100): error TS1484: 'Certificate' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,113): error TS1484: 'Feedback' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/index.ts(2,123): error TS1484: 'User' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/store/auth.tsx(2,10): error TS1484: 'User' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/store/auth.tsx(2,16): error TS1484: 'AuthTokens' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/utils/index.ts(3,48): error TS6133: 'isBefore' is declared but its value is never read.
+src/utils/index.ts(4,10): error TS1484: 'EventStatus' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/utils/index.ts(4,23): error TS1484: 'UserRole' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
