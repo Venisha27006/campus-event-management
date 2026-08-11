@@ -5,7 +5,7 @@
 **/dist/
 **/build/
 
-# Environment files
+# Environment files (keep .env.example, ignore actual secrets)
 .env
 .env.local
 .env.production
@@ -19,5 +19,5 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# Uploads (runtime data)
+# Runtime uploads
 backend/uploads/
