@@ -25,7 +25,7 @@ services:
       - key: REFRESH_TOKEN_EXPIRES_IN
         value: 7d
       - key: FRONTEND_URL
-        value: https://campus-event-frontend.vercel.app
+        value: https://campus-event-management-r9ss.vercel.app
       - key: APP_NAME
         value: Campus Event Management System
 
