@@ -10,6 +10,10 @@ const transporter = nodemailer.createTransport({
 
 const sendMail = async (to: string, subject: string, html: string) => {
   if (config.nodeEnv === 'test') return;
+  if (!config.email.user || !config.email.pass) {
+    console.log(`[Email skipped - no SMTP config] To: ${to}, Subject: ${subject}`);
+    return;
+  }
   try {
     await transporter.sendMail({ from: `"${config.appName}" <${config.email.from}>`, to, subject, html });
   } catch (err) {

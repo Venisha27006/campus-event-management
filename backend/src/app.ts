@@ -12,7 +12,20 @@ const app = express();
 
 // ─── Security Middleware ──────────────────────────────────────────────────────
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
-app.use(cors({ origin: config.frontendUrl, credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    const allowed = [
+      config.frontendUrl,
+      /\.vercel\.app$/,
+      /^http:\/\/localhost:/,
+    ];
+    const isAllowed = allowed.some(p => typeof p === 'string' ? p === origin : p.test(origin));
+    callback(null, isAllowed ? origin : false);
+  },
+  credentials: true,
+}));
 
 // ─── Rate Limiting ────────────────────────────────────────────────────────────
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { success: false, message: 'Too many requests' } });

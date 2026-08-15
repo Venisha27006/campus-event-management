@@ -24,7 +24,10 @@ export const errorHandler = (err: any, _req: Request, res: Response, _next: Next
   }
 
   console.error('Unhandled error:', err);
-  res.status(500).json({ success: false, message: 'Internal server error' });
+  const message = process.env.NODE_ENV !== 'production'
+    ? (err as Error).message || 'Internal server error'
+    : 'Internal server error';
+  res.status(500).json({ success: false, message });
 };
 
 export const notFound = (_req: Request, res: Response) => {
