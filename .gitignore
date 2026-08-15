@@ -9,6 +9,7 @@
 .env
 .env.local
 backend/.env
+frontend/.env
 
 # Logs
 *.log
@@ -20,3 +21,6 @@ Thumbs.db
 
 # Runtime uploads
 backend/uploads/
+
+# Prisma generated dist
+backend/prisma/dist/
